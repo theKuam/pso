@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class CitySwarm extends Swarm {
     private static ArrayList<City> map = new ArrayList<>();
-    private static final int DOMAIN = 100; //Coordinates domain.
+    private static final int DOMAIN = 50; //Coordinates domain.
     private static final double TARGET = 0.0;
     private static double globalBest = Double.MAX_VALUE;
     private static int cityCount = 10; //Number of cities.
