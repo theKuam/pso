@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class CitySwarm extends Swarm {
     private static ArrayList<City> map = new ArrayList<>();
-    private static final int DOMAIN = 50; //Coordinates domain.
+    private static final int DOMAIN = 250; //Coordinates domain.
     private static final double TARGET = 0.0;
     private static double globalBest = Double.MAX_VALUE;
     private static int cityCount = 10; //Number of cities.
@@ -18,33 +18,45 @@ public class CitySwarm extends Swarm {
     private static ArrayList<Integer> aY = new ArrayList<>(); //Y-coordinate list.
 
     //Initialize a map with cities.
-    public static void initializeMap() {
-        System.out.print("Number of Cities: ");
-        Scanner sc = new Scanner(System.in);
-        cityCount = sc.nextInt();
-        int randomX, randomY;
+    public static void initializeMap(ArrayList<Integer> Ax, ArrayList<Integer> Ay) {
+        if(Ax.isEmpty() && Ay.isEmpty()) {
+            System.out.print("Number of Cities: ");
+            Scanner sc = new Scanner(System.in);
+            cityCount = sc.nextInt();
+            int randomX, randomY;
 
-        //Create city list without concurrent points.
-        boolean duplicate;
-        while(aX.size() < cityCount) {
-            do {
-                randomX = new Random().nextInt(DOMAIN);
-                if(aX.indexOf(randomX) == -1) {
-                    duplicate = false;
-                    aX.add(randomX);
-                    randomY = new Random().nextInt(DOMAIN);
-                    aY.add(randomY);
-                }
-                else duplicate = true;
-            } while(duplicate);
+            //Create city list without concurrent points.
+            boolean duplicate;
+            while(aX.size() < cityCount) {
+                do {
+                    randomX = new Random().nextInt(DOMAIN);
+                    if(aX.indexOf(randomX) == -1) {
+                        duplicate = false;
+                        aX.add(randomX);
+                        randomY = new Random().nextInt(DOMAIN);
+                        aY.add(randomY);
+                    }
+                    else duplicate = true;
+                } while(duplicate);
+            }
         }
-
         //Add city into the map.
-        for (int i = 0; i < cityCount; i++) {
-            City city = new City();
-            city.setcX(aX.get(i));
-            city.setcY(aY.get(i));
-            map.add(city);
+        if(aX.isEmpty() && aY.isEmpty()) {
+            cityCount = Ax.size();
+            for (int i = 0; i < cityCount; i++) {
+                City city = new City();
+                city.setcX(Ax.get(i));
+                city.setcY(Ay.get(i));
+                map.add(city);
+            }
+        }
+        else {
+            for (int i = 0; i < cityCount; i++) {
+                City city = new City();
+                city.setcX(aX.get(i));
+                city.setcY(aY.get(i));
+                map.add(city);
+            }
         }
     }
 
@@ -226,7 +238,7 @@ public class CitySwarm extends Swarm {
         globalBest = gBest;
         //for each particles, calculate new velocity.
         for (int i = 0; i < PARTICLE_COUNT; i++) {
-            addVelocity = V_WEIGHT*(new Random()).nextDouble()*(gBest - particles.get(i).getpBest());
+            addVelocity = V_WEIGHT*(new Random()).nextDouble()*gBest/(particles.get(i).getpBest());
             particles.get(i).setVelocity(addVelocity);
         }
     }
